@@ -7,16 +7,35 @@ export default function App() {
   const [listaTarefas, setListaTarefas] = useState([]);
 
   const adicionarTarefa = () => {
-    if (tarefaAtual.trim() !== '') {
-      setListaTarefas([...listaTarefas, tarefaAtual]);
-      setTarefaAtual('');
+    if (tarefaAtual.trim() === '') {
+      return;  
     }
+    const novaLista = [...listaTarefas, tarefaAtual];
+    setListaTarefas(novaLista);
+    setTarefaAtual('');
+    salvarDadosLocal(novaLista);
   };
 
-  const salvarTeste = async () => {
-    await AsyncStorage.setItem('chave_secreta', 'Felipe');
-    console.log('Teste salvo no cofre!');
-}
+  const salvarDadosLocal = async (listaDeDados) => {
+    try {
+    const listaString = JSON.stringify(listaDeDados);
+    await AsyncStorage.setItem('lista_tarefas', listaString);
+  } catch (error) {
+    console.error('Erro ao salvar dados locais:', error);
+  }
+  };
+
+  const resgatarDadosLocal = async () => {
+    try {
+      const listaString = await AsyncStorage.getItem('lista_tarefas');
+      if (listaString !== null) {
+       setListaConvertida(JSON.parse(listaString));       
+      }
+    } catch (error) {
+      console.error('Erro ao resgatar dados locais:', error);
+    }
+  };
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -51,10 +70,18 @@ export default function App() {
           style={styles.addButton}
           onPress={() => {
             adicionarTarefa();
-            salvarTeste();
           }}
         >
           <Text style={styles.addButtonText}>+</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={styles.addButton}
+          onPress={() => {
+            resgatarDadosLocal();
+          }}
+        >
+          <Text style={styles.addButtonText}>🔁</Text>
         </TouchableOpacity>
       </View>
 
