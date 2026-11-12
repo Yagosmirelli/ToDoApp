@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, SafeAreaView, StatusBar, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -36,6 +36,10 @@ export default function App() {
     }
   };
   
+useEffect(() => {
+    // O código aqui dentro rodará assim que o celular acender!
+    resgatarDadosLocal();
+}, []);
 
   return (
     <SafeAreaView style={styles.container}>
