@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, SafeAreaView, StatusBar, ScrollView } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
   const [tarefaAtual, setTarefaAtual] = useState('');
@@ -11,6 +12,11 @@ export default function App() {
       setTarefaAtual('');
     }
   };
+
+  const salvarTeste = async () => {
+    await AsyncStorage.setItem('chave_secreta', 'Felipe');
+    console.log('Teste salvo no cofre!');
+}
 
   return (
     <SafeAreaView style={styles.container}>
@@ -43,7 +49,10 @@ export default function App() {
         <TouchableOpacity
           activeOpacity={0.8}
           style={styles.addButton}
-          onPress={adicionarTarefa}
+          onPress={() => {
+            adicionarTarefa();
+            salvarTeste();
+          }}
         >
           <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
